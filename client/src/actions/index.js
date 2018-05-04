@@ -75,7 +75,7 @@ export function auth () {
   }
 }
 
-export function addBook(book) {
+export function addBook (book) {
   const request = axios.post('/api/book', book)
     .then(response => response.data)
 
@@ -85,27 +85,83 @@ export function addBook(book) {
   }
 }
 
-
-export function clearNewBook() {
+export function clearNewBook () {
   return {
     type: 'CLEAR_NEWBOOK',
     payload: {}
   }
 }
 
+export function getUserPosts (userId) {
+  const request = axios.get(`/api/user_posts?user=${userId}`)
+    .then(response => response.data)
+  return {
+    type: 'GET_USER_POSTS',
+    payload: request
+  }
+}
 
+export function getBook (id) {
+  const request = axios.get(`/api/getBook?id=${id}`)
+    .then(response => response.data)
+  return {
+    type: 'GET_BOOK',
+    payload: request
+  }
+}
 
+export function updateBook (data) {
+  const request = axios.post(`/api/book_update`, data)
+    .then(response => response.data)
+  return {
+    type: 'UPDATE_BOOK',
+    payload: request
+  }
+}
 
+export function deleteBook (id) {
+  const request = axios.delete(`/api/delete_book?id=${id}`)
+    .then(response => response.data)
+  return {
+    type: 'DELETE_BOOK',
+    payload: request
+  }
+}
 
+export function clearBook () {
+  return {
+    type: 'CLEAR_BOOK',
+    payload: {
+      book: null,
+      updateBook: false,
+      postDeleted: false
+    }
+  }
+}
 
+export function getUser () {
+  const request = axios.get(`/api/users`)
+    .then(response => response.data)
+  return {
+    type: 'GET_USERS',
+    payload: request
+  }
+}
 
+export function userRegisterUser (user, userList) {
+  const request = axios.post(`/api/register`, user)
+  return (dispatch) => {
+    request.then(({data}) => {
+      let users = data.success ? [...userList, data.user]:userList
+      let response = {
+        success:data.success,
+        users
+      }
 
-
-
-
-
-
-
-
-
-
+      dispatch({
+        type: 'USER_REGISTER',
+        payload:response
+      })
+    })
+  }
+}
